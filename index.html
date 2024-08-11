@@ -118,9 +118,10 @@
             margin-top: 20px;
         }
         .reset-button, .paypal-button {
+            width: 45%; /* Both buttons will take up 45% of the container's width */
             background-color: red;
             color: white;
-            padding: 25px 45px;
+            padding: 25px 0; /* Adjusted padding to maintain a consistent button height */
             border-radius: 10px;
             border: none;
             font-size: 26px;
@@ -129,10 +130,12 @@
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
             text-transform: uppercase;
             transition: transform 0.2s ease;
+            text-align: center; /* Center the text */
         }
         .paypal-button {
-            background-color: #0070ba;
-            padding: 25px 45px;
+    background-color: #0070ba;
+    padding: 25px 0;
+    text-decoration: none; /* Add this line to remove the underline */
         }
         .reset-button:hover {
             background-color: darkred;
@@ -157,7 +160,7 @@
 
     <div class="button-container">
         <button class="reset-button" onclick="resetGame()">RESET</button>
-        <button class="paypal-button">PAYPAL</button>
+        <a class="paypal-button" href="https://www.paypal.com/ncp/payment/LHUVZD6UU693U" target="_blank">APPRECIATE<br>MY WORK?</a>
     </div>
 
     <div class="popup" id="popup">
