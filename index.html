@@ -15,38 +15,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             height: 100vh;
             margin: 0;
-        }
-        .title {
-            font-size: 3em;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            margin-bottom: 20px;
-            text-align: center;
+            flex-direction: column;
         }
         .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1%;
+            background-color: #2a2a2a;
+            padding: 2%;
             border-radius: 15px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            max-width: 80vw;
-            max-height: 70vh;
-            background-color: #2a2a2a;
-            border: 0.5em solid #fed01d;
-            max-width: 1200px; /* This sets the maximum width */
-        }
-        .side-text {
-            width: 15%;
-            font-size: 1.2em;
-            font-weight: bold; /* Make the text bold */
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            margin: 0 10px; /* Adjusted margin to bring text closer */
-            line-height: 1.5em; /* Added for consistent spacing */
-            text-align: center; /* Center align the text */
+            max-width: 65vw;
+            max-height: 65vh;
+            display: grid;
+            place-items: center;
+            border: 0.5em solid #fed01d; /* Yellow border for the main board */
         }
         .grid {
             display: grid;
@@ -56,7 +38,6 @@
             height: 60vw;
             max-width: 60vh;
             max-height: 60vh;
-            margin: 0 20px;
         }
         .grid-item {
             position: relative;
@@ -94,9 +75,9 @@
             border-radius: 15px;
             border: 0.5em solid #fed01d; /* Yellow border for popup */
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.9); /* Darker drop shadow */
-            width: 50vw; /* Adjusted width */
+            width: 45vw; /* Adjusted width */
             height: auto;
-            max-width: 500px;
+            max-width: 450px;
             z-index: 1000;
         }
         .popup-grid {
@@ -129,47 +110,54 @@
         .popup-item:hover {
             background-color: white;
         }
-        .reset-container {
+        .button-container {
+            width: 50vw;
+            max-width: 50vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 10px;
+            justify-content: space-evenly;
+            margin-top: 20px;
         }
-        .reset-button {
-            padding: 1em 2em;
-            background-color: #ff4040;
+        .reset-button, .paypal-button {
+            background-color: red;
             color: white;
+            padding: 25px 45px;
             border-radius: 10px;
-            border: 2px solid white;
-            font-size: 1.5em;
+            border: none;
+            font-size: 26px;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            transition: transform 0.2s ease;
+        }
+        .paypal-button {
+            background-color: #0070ba;
+            padding: 25px 45px;
         }
         .reset-button:hover {
-            background-color: #e63939;
+            background-color: darkred;
+            transform: scale(1.05);
+        }
+        .paypal-button:hover {
+            background-color: #005ea6;
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
-    <div class="title">ANNIVERSARY MATCHING GAME!</div>
+    <h1 style="text-align: center; font-size: 3em; font-weight: bold; margin: 0; padding-bottom: 10px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
+        ANNIVERSARY MATCHING GAME!
+    </h1>
+
     <div class="container">
-        <div class="side-text">
-            This is an aid for tracking the flipped cards on the Anniversary Matching Game on Survivor.io.<br><br>
-            Click the reset button to reset the board.
-        </div>
         <div class="grid" id="main-grid">
             <!-- Grid items will be dynamically generated here -->
         </div>
-        <div class="side-text">
-            Thank you for using this matching app!<br>If you found it useful, please consider supporting me!<br><br>
-            PayPal link coming soon!
-        </div>
     </div>
 
-    <div class="reset-container">
-        <button class="reset-button">RESET</button>
+    <div class="button-container">
+        <button class="reset-button" onclick="resetGame()">RESET</button>
+        <button class="paypal-button">PAYPAL</button>
     </div>
 
     <div class="popup" id="popup">
@@ -240,6 +228,15 @@
                 popup.style.display = 'none';
             }
         });
+
+        // Function to reset the game
+        function resetGame() {
+            const gridItems = document.querySelectorAll('.grid-item');
+            gridItems.forEach(item => {
+                item.innerHTML = `<img src="${unflippedCardUrl}" alt="card" />`;
+                item.classList.remove('selected');
+            });
+        }
     </script>
 </body>
 </html>
