@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matching Game Tool</title>
+    <style>
+        body {
+            background-image: url('https://i.imgur.com/eSilqr3.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+        .title {
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1%;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            max-width: 80vw;
+            max-height: 70vh;
+            background-color: #2a2a2a;
+            border: 0.5em solid #fed01d;
+            max-width: 1200px; /* This sets the maximum width */
+        }
+        .side-text {
+            width: 15%;
+            font-size: 1.2em;
+            font-weight: bold; /* Make the text bold */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            margin: 0 10px; /* Adjusted margin to bring text closer */
+            line-height: 1.5em; /* Added for consistent spacing */
+            text-align: center; /* Center align the text */
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2%; /* Space between squares */
+            width: 60vw;
+            height: 60vw;
+            max-width: 60vh;
+            max-height: 60vh;
+            margin: 0 20px;
+        }
+        .grid-item {
+            position: relative;
+            width: 100%;
+            padding-bottom: 100%;
+            background-color: #fff4ad; /* Light yellow border */
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .grid-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80%;
+            height: 80%;
+            margin: 10%; /* To center the image within the border */
+            object-fit: cover;
+        }
+        .grid-item.selected {
+            background-color: white;
+        }
+        .grid-item:hover {
+            background-color: white;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #2a2a2a;
+            padding: 2%;
+            border-radius: 15px;
+            border: 0.5em solid #fed01d; /* Yellow border for popup */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.9); /* Darker drop shadow */
+            width: 50vw; /* Adjusted width */
+            height: auto;
+            max-width: 500px;
+            z-index: 1000;
+        }
+        .popup-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 2%; /* Space between squares */
+            width: 100%;
+            height: 100%;
+        }
+        .popup-item {
+            position: relative;
+            width: 100%;
+            padding-bottom: 100%;
+            background-color: #fff4ad; /* Light yellow border */
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .popup-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80%;
+            height: 80%;
+            margin: 10%;
+            object-fit: cover;
+        }
+        .popup-item:hover {
+            background-color: white;
+        }
+        .reset-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .reset-button {
+            padding: 1em 2em;
+            background-color: #ff4040;
+            color: white;
+            border-radius: 10px;
+            border: 2px solid white;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        .reset-button:hover {
+            background-color: #e63939;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">ANNIVERSARY MATCHING GAME!</div>
+    <div class="container">
+        <div class="side-text">
+            This is an aid for tracking the flipped cards on the Anniversary Matching Game on Survivor.io.<br><br>
+            Click the reset button to reset the board.
+        </div>
+        <div class="grid" id="main-grid">
+            <!-- Grid items will be dynamically generated here -->
+        </div>
+        <div class="side-text">
+            Thank you for using this matching app!<br>If you found it useful, please consider supporting me!<br><br>
+            PayPal link coming soon!
+        </div>
+    </div>
+
+    <div class="reset-container">
+        <button class="reset-button">RESET</button>
+    </div>
+
+    <div class="popup" id="popup">
+        <div class="popup-grid" id="popup-grid">
+            <!-- Popup items will be dynamically generated here -->
+        </div>
+    </div>
+
+    <script>
+        // Images and their URLs
+        const images = [
+            { name: "Common", url: "https://i.imgur.com/GGovnjS.png" },
+            { name: "Catnips", url: "https://i.imgur.com/mcdGR9Z.png" },
+            { name: "Tsukuyomi", url: "https://i.imgur.com/RprC5XT.png" },
+            { name: "Wesson", url: "https://i.imgur.com/kQu1uiW.png" },
+            { name: "Metallia", url: "https://i.imgur.com/zC7GiDy.png" },
+            { name: "Robot", url: "https://i.imgur.com/hLuUT3D.png" },
+            { name: "Frank", url: "https://i.imgur.com/Ns8Gpjs.png" },
+            { name: "Monster", url: "https://i.imgur.com/G3c1XQb.png" },
+            { name: "+1", url: "https://i.imgur.com/XKkBpMz.png" },
+            { name: "Crown", url: "https://i.imgur.com/6OpXmIL.png" },
+        ];
+
+        // URL for the Unflipped Card
+        const unflippedCardUrl = "https://i.imgur.com/k9X0hcV.png";
+
+        // Generate grid items
+        const grid = document.getElementById('main-grid');
+        for (let i = 0; i < 25; i++) {
+            const div = document.createElement('div');
+            div.className = 'grid-item';
+            div.innerHTML = `<img src="${unflippedCardUrl}" alt="card" />`;
+
+            // Add click event to show popup for image selection
+            div.addEventListener('click', () => showPopup(div));
+
+            grid.appendChild(div);
+        }
+
+        // Show popup and allow image selection
+        function showPopup(gridItem) {
+            const popup = document.getElementById('popup');
+            const popupGrid = document.getElementById('popup-grid');
+            popupGrid.innerHTML = ''; // Clear previous content
+
+            images.forEach(image => {
+                const popupDiv = document.createElement('div');
+                popupDiv.className = 'popup-item';
+                popupDiv.innerHTML = `<img src="${image.url}" alt="${image.name}" />`;
+
+                // When an image is clicked, replace the grid item image, set the border to white, and close the popup
+                popupDiv.addEventListener('click', () => {
+                    gridItem.innerHTML = `<img src="${image.url}" alt="card" />`;
+                    gridItem.classList.add('selected');
+                    popup.style.display = 'none';
+                });
+
+                popupGrid.appendChild(popupDiv);
+            });
+
+            popup.style.display = 'block';
+        }
+
+        // Close the popup if clicking outside
+        window.addEventListener('click', (e) => {
+            const popup = document.getElementById('popup');
+            if (e.target === popup) {
+                popup.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
